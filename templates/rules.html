@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block the_block %}
+	<h1>Welcome to the famous word game.</h1>
+    <h2>To play this game you must give the game seven words using the letters of the chosen word </h2>
+    <h3>The rules are:</h3>
+    <ol>
+		<li>Each word is made up from letters contained within the source word.</li>
+		<li>Each word exists within the dictionary (i.e., it's a “real” word).</li>
+		<li>The words all have three letters or more.</li>
+		<li>There are no duplicates.</li>
+		<li>None of the seven submitted words is the source word.</li>
+    </ol>
+    <h2>This is a race agaisnt the clock.</h2>
+    <form action='/startgame' method='POST'>
+		<input type='submit' value='Do it!'>
+	</form>
+{% endblock %}
+

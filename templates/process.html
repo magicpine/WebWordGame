@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block the_block %}
+	<h1>Your word is: {{source_word}} </h1>
+    <h2>The clock has already started.  Better hurry up!</h2>
+    <h3>Enter your seven words below, seperated by a space:</h3>
+    <form action='/processwords' method='POST'>
+		<input type='text' required autofocus size=100 name='wordlist'>
+		<br />
+		<br />
+		<input type='submit' value='Submit'>
+	</form>
+{% endblock %}
+
