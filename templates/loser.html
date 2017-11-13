@@ -2,12 +2,20 @@
 
 {% block the_block %}
 	<h1>LOSER</h1>
-				<ul>
-				{% for name in errors %}
-					<li>
-						{{name}}
-					</li>
-				{% endfor %}
-			</ul>
+	<ul>
+	{% for name in errors %}
+		<li>
+			{{name}}
+		</li>
+	{% endfor %}
+	</ul>
+	<h2>Maybe next time</h2>
+	<form action='/startgame' method='POST'>
+		<input type='submit' value='Play again?'>
+	</form>
+	</br>
+	<form action='/' method='GET'>
+		<input type='submit' value='Rules'>
+	</form>
 {% endblock %}
 

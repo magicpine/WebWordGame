@@ -2,6 +2,13 @@
 
 {% block the_block %}
 	<h1>WINNER</h1>
-	{{timeTook}}
+	<p>It took you: {{timeTook}} to win!</p>
+	<h2>Record Your Name</h2>
+    <form action='/processtime' method='POST'>
+		<input type='text' required autofocus size=100 name='time'>
+		<br />
+		<br />
+		<input type='submit' value='Submit'>
+	</form>
 {% endblock %}
 

@@ -5,7 +5,7 @@ import word_utils
 import data_utils
 import wordgame
 
-app = Flask(__name__)
+app = Flask(__name__) 
 
 
 @app.route('/')
@@ -30,61 +30,68 @@ def processWords():
 		wordList = list((request.form['wordList']).strip().split(' '))
 		for words in wordList:
 			words = words.lower()
-		timeTook = round((datetime.now() - session['startTime']).total_seconds(),2)
+		session['timeTook'] = round((datetime.now() - session['startTime']).total_seconds(),2)
 		winner = True
+		errors = []
 		#Rule Zero
-		if (len(wordList) != 7):
+		if len(wordList) != 7:
 			winner = False
-
+			if len(wordList) < 7:
+				tmp = "You didn't type in enough words.  Words Detected: {0} Words needed: 7".format(len(wordList))
+			else:
+				tmp = 'You typed in too many words.  Words Detected: {0} Words needed: 7'.format(len(wordList))
+			errors.append(tmp)
 		#Rule One
-		wrongLetters = {}
 		for words in wordList:
 			wrongLettersList = []
+			isError = False
 			tmp = word_utils.check_letters(session['sourceWord'], words)
 			for letters in tmp:
 				if letters[1] == False:
 					winner = False
-					wrongLettersList.append(letters[0])
-			wrongLetters[words] = wrongLettersList
+					isError = True
+					wrongLettersList.append(letters[0])	
+			if (isError):
+				isError = False
+				tmp = 'You used these wrong letters [{0}] in this word: {1}.'.format(','.join(wrongLettersList), words)
+				errors.append(tmp)
 		#Rule Two
-		wrongSpelling = []
-		spelling = wordgame.check_spellings(wordList)
-		for words in spelling:
-			if words[1] == False:
-				wrongSpelling.append(words)
-		if len(wrongSpelling) != 0:
-			winner = False
-		#Rule Three
-		wrongLength = []
 		length = word_utils.check_size(wordList)
 		for words in length:
 			if words[1] == False:
-				wrongLength.append(words)
-		if len(wrongLength) != 0:
-			winner = False
+				winner = False
+				tmp = 'The word: {0} is not three or more characters long'.format(words[0])
+				errors.append(tmp)
 		#Rule Four
-		duplicatesWords = []
 		if word_utils.duplicates(wordList):
 			winner = False
-			tmp = wordList.copy()
+			wordListCopy = wordList.copy()
 			for words in wordList:
-				tmp.remove(words)
-				if words in tmp:
-					duplicatesWords.append(words)
+				wordListCopy.remove(words)
+				if words in wordListCopy:
+					tmp = 'The word: {0} was duplicated'.format(words)
+					errors.append(tmp)
 		#Rule Five
 		sameSourceWord = []
 		sameSourceWord = word_utils.check_not_sourceword(wordList, session['sourceWord'])
 		if len(sameSourceWord) != 0:
 			winner = False
-		#Checks
+			tmp = 'You tried to use the source word {0} time(s)'.format(len(sameSourceWord))
+			errors.append(tmp)
+		#End Rules
 		if winner:
 			return render_template('winner.html',
 									the_title='Winner!',
-									timeTook = timeTook)
-		errors = [wrongLetters, wrongSpelling, wrongLength, duplicatesWords, sameSourceWord]
+									timeTook = session['timeTook'])
 		return render_template('loser.html',
 								the_title='Loser',
 								errors = errors)
+
+
+@app.route('/processtime', methods=['POST'])
+def topten():
+	pass
+
 
 
 if __name__ == '__main__':
