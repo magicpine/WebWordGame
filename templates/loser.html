@@ -3,9 +3,9 @@
 {% block the_block %}
 	<h1>LOSER</h1>
 	<ul>
-	{% for name in errors %}
+	{% for error in get_flashed_messages() %}
 		<li>
-			{{name}}
+			{{error}}
 		</li>
 	{% endfor %}
 	</ul>
