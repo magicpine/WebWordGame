@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block the_block %}
+	<h1>TIME</h1>
+	<ul>
+		{% for timetook, name in board[:10] %}
+		<li>
+			<p>Position: {{loop.index}} -- {{name}} took {{timetook}} to finish.</p>
+		</li>
+		{% endfor %}
+	</ul>
+	{% block the_pos %}
+	{% endblock %}
+	<form action='/startgame' method='POST'>
+		<input type='submit' value='Play again?'>
+	</form>
+	</br>
+	<form action='/' method='GET'>
+		<input type='submit' value='Rules'>
+	</form>
+{% endblock %}
