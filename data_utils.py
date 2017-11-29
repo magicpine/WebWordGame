@@ -1,28 +1,35 @@
 # data_utils.py - part of the WordGame - by Paul Barry.
 # email: paul.barry@itcarlow.ie
 
-import pickle
-import os
+import DBcm
 
 
-PICKLE = 'scores.pickle'
+config = {
+	'user': 'scoresuser',
+	'password': 'scorepasswd',
+	'host': 'localhost',
+	'database': 'scoresDB',
+}
 
 
-def add_to_scores(name, score) -> None:
+def add_to_scores(name, score, word) -> None:
     """Add the name and its associated score to the pickle."""
-    scores = []
-    if not os.path.exists(PICKLE):
-        with open(PICKLE, 'wb') as scoresf:
-            pickle.dump(scores, scoresf)
-    else:
-        with open(PICKLE, 'rb') as scoresf:
-            scores = pickle.load(scoresf)
-    scores.append((score, name))  # Note the ordering here.
-    with open(PICKLE, 'wb') as scoresf:
-        pickle.dump(scores, scoresf)
+	with DBcm.UseDatabase(config) as cursor:
+		_SQL = """
+		insert into leaderboard
+		(name, sourceword, timetaken)
+		values
+		(%s, %s, %s)
+		"""
+		cursor.execute(_SQL, (name, word, score))
 
 
 def get_sorted_leaderboard() -> list:
     """Return a sorted list of tuples - this is the leaderboard."""
-    with open(PICKLE, 'rb') as scoresf:
-        return sorted(pickle.load(scoresf))
+ 	with DBcm.UseDatabase(config) as cursor:
+		_SQL = """
+		select timetaken, name, sourceword from leaderboard
+		order by timetaken asc
+		"""
+		cursor.execute(_SQL)
+		return cursor.fetchall()

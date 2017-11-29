@@ -115,7 +115,7 @@ def topten():
         if session['added'] is False:
             session['added'] = True
             session['name'] = request.form['name'].strip()
-            data_utils.add_to_scores(session['name'], session['timeTook'])
+            data_utils.add_to_scores(session['name'], session['timeTook'], session['sourceWord'])
             return redirect(url_for('processtime'), code=307)
         else:
             return redirect(url_for('processtime'))
@@ -129,7 +129,7 @@ def processtime():
                                the_title='Top Ten for Word Game',
                                board=leaderBoard)
     elif request.method == 'POST':
-        find = (session['timeTook'], session['name'])
+        find = (session['timeTook'], session['name'], sesson['sourceword'])
         length = len(leaderBoard)
         message = Markup('<h3>You placed {0} out of {1}</h3>'
                          .format(leaderBoard.index(find) + 1, length))

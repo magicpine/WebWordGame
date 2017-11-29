@@ -3,9 +3,9 @@
 {% block the_block %}
 	<h1>TIME</h1>
 	<ul>
-		{% for timetook, name in board[:10] %}
+		{% for timetook, name, word in board[:10] %}
 		<li>
-			<p>Position: {{loop.index}} -- {{name}} took {{timetook}} to finish.</p>
+			<p>Position: {{loop.index}} -- {{name}} took {{timetook}} to finish using {{word}}.</p>
 		</li>
 		{% endfor %}
 	</ul>
